@@ -88,3 +88,5 @@ C:\Parul\ASPDotNetWebAPI\WebAPIDemo\WebAPIDemo\bin\System.Web.Http.Owin.xml
 C:\Parul\ASPDotNetWebAPI\WebAPIDemo\WebAPIDemo\obj\Debug\WebAPIDemo.csprojResolveAssemblyReference.cache
 C:\Parul\ASPDotNetWebAPI\WebAPIDemo\WebAPIDemo\obj\Debug\WebAPIDemo.dll
 C:\Parul\ASPDotNetWebAPI\WebAPIDemo\WebAPIDemo\obj\Debug\WebAPIDemo.pdb
+C:\Parul\ASPDotNetWebAPI\WebAPIDemo\WebAPIDemo\bin\EmployeeDataAccess.dll
+C:\Parul\ASPDotNetWebAPI\WebAPIDemo\WebAPIDemo\bin\EmployeeDataAccess.pdb
