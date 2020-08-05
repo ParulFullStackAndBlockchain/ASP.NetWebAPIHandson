@@ -5,11 +5,30 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
 
 namespace WebAPIDemo
 {
     public static class WebApiConfig
     {
+        //To return JSON instead of XML from ASP.NET Web API Service when a request is made from the browser.
+        //But When the request is issued from a tool like fiddler the Accept header value should be respected. 
+        //Approach-2
+        public class CustomJsonFormatter : JsonMediaTypeFormatter
+        {
+            public CustomJsonFormatter()
+            {
+                this.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
+            }
+
+            public override void SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
+            {
+                base.SetDefaultContentHeaders(type, headers, mediaType);
+                headers.ContentType = new MediaTypeHeaderValue("application/json");
+            }
+        }
+
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
@@ -26,11 +45,21 @@ namespace WebAPIDemo
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            //It's also very easy to change the serialization settings of these formatters. For example, if you want the JSON data
-            //to be properly indented and use camel case instead of pascal case for property names, all you have to do is modify
-            //the serialization settings of JSON formatters as shown below. 
-            config.Formatters.JsonFormatter.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
-            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            //To return only JSON from ASP.NET Web API Service irrespective of the Accept header value
+            //config.Formatters.Remove(config.Formatters.XmlFormatter);
+
+            //To return only XML from ASP.NET Web API Service irrespective of the Accept header value
+            //config.Formatters.Remove(config.Formatters.JsonFormatter);
+
+            //To return JSON instead of XML from ASP.NET Web API Service when a request is made from the browser.
+            //Approach-1
+            //config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
+
+            //To return JSON instead of XML from ASP.NET Web API Service when a request is made from the browser.
+            //But When the request is issued from a tool like fiddler the Accept header value should be respected. 
+            //Approach-2
+            config.Formatters.Add(new CustomJsonFormatter());//Registers the formatter
+
         }
     }
 }
