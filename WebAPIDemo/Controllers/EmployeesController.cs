@@ -60,5 +60,34 @@ namespace WebAPIDemo.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
             }
         }
+
+        public HttpResponseMessage Delete(int id)
+        {
+            try
+            {
+                using (WebAPIDemoEmployeeDBEntities entities = new WebAPIDemoEmployeeDBEntities())
+                {
+                    var entity = entities.Employees.FirstOrDefault(e => e.ID == id);
+                    if (entity == null)
+                    {
+                        //If an item is not found, status code '404 Not Found' is returned.
+                        return Request.CreateErrorResponse(HttpStatusCode.NotFound,
+                            "Employee with Id = " + id.ToString() + " not found to delete");
+                    }
+                    else
+                    {
+                        entities.Employees.Remove(entity);
+                        entities.SaveChanges();
+                        //When the deletion is successful, status code '200 OK' is returned.
+                        return Request.CreateResponse(HttpStatusCode.OK);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
+        }
+
     }
 }
