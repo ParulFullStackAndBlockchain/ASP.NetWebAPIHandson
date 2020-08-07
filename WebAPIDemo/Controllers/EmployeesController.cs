@@ -89,5 +89,38 @@ namespace WebAPIDemo.Controllers
             }
         }
 
+        public HttpResponseMessage Put(int id, [FromBody]Employee employee)
+        {
+            try
+            {
+                using (WebAPIDemoEmployeeDBEntities entities = new WebAPIDemoEmployeeDBEntities())
+                {
+                    var entity = entities.Employees.FirstOrDefault(e => e.ID == id);
+                    if (entity == null)
+                    {
+                        //When we try to update an employee whose id does not exist,status code '404 Not Found' is returned
+                        return Request.CreateErrorResponse(HttpStatusCode.NotFound,
+                            "Employee with Id " + id.ToString() + " not found to update");
+                    }
+                    else
+                    {
+                        entity.FirstName = employee.FirstName;
+                        entity.LastName = employee.LastName;
+                        entity.Gender = employee.Gender;
+                        entity.Salary = employee.Salary;
+
+                        entities.SaveChanges();
+
+                        //When the update is successful, status code '200 OK' is returned
+                        return Request.CreateResponse(HttpStatusCode.OK, entity);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+            }
+        }
+
     }
 }
