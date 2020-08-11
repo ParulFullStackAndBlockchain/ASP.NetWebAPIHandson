@@ -104,6 +104,25 @@ namespace WebAPIDemo.Controllers
             }
         }
 
+        //To update employee details whose Id is 1 we issue a Put request to the following URI http://localhost:3567/api/Employees/1
+        //We can also include the Id as a query string parameter in place of route data(mentioned above). URI http://localhost:3567/api/Employees?id=1
+
+        //When a PUT request is issued, Web API maps the data in the request to the PUT method parameters in the EmployeesController. 
+        //This process is called Parameter Binding.
+
+        //Now let us understand the default convention used by Web API for binding parameters.
+        //If the parameter is a simple type like int, bool, double, etc., Web API tries to get the value from the URI
+        //(Either from route data or Query String)
+        //If the parameter is a complex type like Customer, Employee etc., Web API tries to get the value from the request body
+        //So in our case, the id parameter is a simple type, so Web API tries to get the value from the request URI.
+        //The employee parameter is a complex type, so Web API gets the value from the request body.
+
+        //We can change this default parameter binding process by using [FromBody]
+        //and[FromUri] attributes.Notice in the example below
+        //We have decorated id parameter with[FromBody] attribute, this forces Web API to get it from the request body
+        //We have decorated employee parameter with [FromUri] attribute, this forces Web API to get employee data from the 
+        //URI (i.e Route data or Query String)
+
         public HttpResponseMessage Put(int id, [FromBody]Employee employee)
         {
             try
