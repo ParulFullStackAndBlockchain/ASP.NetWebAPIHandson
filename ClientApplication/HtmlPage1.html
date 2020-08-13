@@ -13,7 +13,7 @@
                 $.ajax({
                     type: 'GET',
                     url: "http://localhost:3567/api/Employees", //absolute path 
-                    dataType: 'json', //Step3 - Set the dataType to json
+                    dataType: 'json', 
                     success: function (data) {
                         ulEmployees.empty();
                         $.each(data, function (index, val) {
