@@ -10,7 +10,7 @@ namespace WebAPIDemo.Controllers
 {
     public class EmployeesController : ApiController
     {
-        // gender parameter is mapped to the gender parameter sent in the query string    
+        // gender parameter is mapped to the gender parameter sent in the query string        
         public HttpResponseMessage Get(string gender = "All")
         {
             using (WebAPIDemoEmployeeDBEntities entities = new WebAPIDemoEmployeeDBEntities())

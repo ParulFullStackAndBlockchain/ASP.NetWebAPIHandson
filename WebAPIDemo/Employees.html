@@ -13,7 +13,7 @@
                 $.ajax({
                     type: 'GET',
                     url: "api/employees/",//relative path is specified as html page and web api service are part of same project
-                    dataType: 'jsonp',
+                    dataType: 'json',
                     success: function (data) {
                         ulEmployees.empty();
                         $.each(data, function (index, val) {
@@ -39,36 +39,3 @@
     </div>
 </body>
 </html>
-<!-- What is same origin policy? Browsers allow a web page to make AJAX requests only with in the same domain. Browser 
-security prevents a web page from making AJAX requests to another domain. This is called same origin policy.
-- The following 2 URLs have the same origin http://localhost:1234/api/employees, http://localhost:1234/Employees.html.
-- The following 2 URLs have different origins, because they have different port numbers (1234 v/s 5678)
-http://localhost:1234/api/employees, http://localhost:5678/Employees.html
-- The following 2 URLs have different origins, because they have different domains (.com v/s .net)
-http://pragimtech.com/api/employees, http://pragimtech.net/Employees.html
-- The following 2 URLs have different origins, because they have different schemes (http v/s https)
-https://pragimtech.com/api/employees, http://pragimtech.net/Employees.html
-
-Browsers does not allow cross domain ajax requests. There are 2 ways to get around this problem
-1.)Using JSONP (JSON with Padding), 2.)Enabling CORS (Cross Origin Resource Sharing)
-
-So what is JSONP and what does it do?JSONP stands for JSON with Padding. 
-All JSONP does is wraps the data in a function. So for example, if you have the following JSON object
-{
-    "FirstName" : "Mark",
-    "LastName"  : "Hastings",
-    "Gender"    : "Male",
-}
-JSONP will wrap the data in a function as shown below
-CallbackFunction({
-    "FirstName" : "Mark",
-    "LastName"  : "Hastings",
-    "Gender"    : "Male",
-})
-Browsers allow to consume JavaScript that is present in a different domain but not data.Since the data is  
-wrapped in a JavaScript function, this can be consumed by a web page that is present in a different domain.
-
-Steps to make ASP.NET Web API Service to return JSONP formatted data and consume it from a cross domain ajax request
-Step 1 : To support JSONP format, execute the following command using NuGet Package Manager Console which installs 
-WebApiContrib.Formatting.Jsonp package.
-Install-Package WebApiContrib.Formatting.Jsonp-->

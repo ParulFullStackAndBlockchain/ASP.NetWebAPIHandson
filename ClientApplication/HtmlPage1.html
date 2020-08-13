@@ -13,7 +13,7 @@
                 $.ajax({
                     type: 'GET',
                     url: "http://localhost:3567/api/Employees", //absolute path 
-                    dataType: 'jsonp', //Step 3 : Set the dataType to jsonp 
+                    dataType: 'json', //Step3 - Set the dataType to json
                     success: function (data) {
                         ulEmployees.empty();
                         $.each(data, function (index, val) {
@@ -39,3 +39,7 @@
     </div>
 </body>
 </html>
+<!-- To allow cross domain ajax calls by enabling CORS
+Step 1 : Install Microsoft.AspNet.WebApi.Cors package. Execute the following command using NuGet Package Manager Console. 
+Make sure to select "EmployeeService" project from "Default project" dropdown. Install-Package Microsoft.AspNet.WebApi.Cors
+-->
