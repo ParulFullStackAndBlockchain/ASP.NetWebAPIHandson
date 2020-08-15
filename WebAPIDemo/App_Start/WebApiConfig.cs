@@ -34,14 +34,17 @@ namespace WebAPIDemo
             EnableCorsAttribute cors = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(cors);
 
-            //This adds RequireHttpsAttribute as a filter to the filters collection. So for every request the code in this filter
-            //is executed. If the request is issued using HTTP, it will be automatically redirected to HTTPS.
-            config.Filters.Add(new RequireHttpsAttribute());
+            //config.Filters.Add(new RequireHttpsAttribute());
         }
     }
 }
 
-//Note : If you don't want to enable HTTPS for the entire application then don't add RequireHttpsAttribute to the filters collection
-//on the config object in the register method. Simply decorate the controller class or the action method with RequireHttpsAttribute 
-//for which you want HTTPS to be enabled. For the rest of the controllers and action methods HTTPS will not be enabled.
+//Enable basic authentication
+//1. The BasicAuthenticationAttribute can be applied on a specific controller, specific action, or globally on all Web API 
+//controllers.
+//2. To enable basic authentication across the entire Web API application, register BasicAuthenticationAttribute as a filter 
+//using the Register() method in WebApiConfig class.
+//config.Filters.Add(new RequireHttpsAttribute());
+//3. You can also apply the attribute on a specific controller, to enable basic authentication for all the methods in that 
+//controller
 

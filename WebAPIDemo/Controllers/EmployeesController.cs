@@ -4,22 +4,27 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Threading;
 using EmployeeDataAccess;
 
 namespace WebAPIDemo.Controllers
 {
     public class EmployeesController : ApiController
     {
-        // gender parameter is mapped to the gender parameter sent in the query string        
+        //Business Requirement : If we login with "male" username, we want to display only "male" employees and if we login with 
+        //"female" username, we want to display only female employees.
+        //Testing basic authentication using fiddler or Postman where The username and password need to be colon(:) separated 
+        //and base64 encoded in the Authorization header (example- Authorization: Basic YW1hbGU6YW1hbGU=)
+
+        // In our case let's just enable basic authentication for Get() method in EmployeesController. 
+        [BasicAuthentication]
         public HttpResponseMessage Get(string gender = "All")
         {
             using (WebAPIDemoEmployeeDBEntities entities = new WebAPIDemoEmployeeDBEntities())
             {
-                switch (gender.ToLower())
+                string username = Thread.CurrentPrincipal.Identity.Name;
+                switch (username.ToLower())
                 {
-                    case "all":
-                        return Request.CreateResponse(HttpStatusCode.OK,
-                            entities.Employees.ToList());
                     case "male":
                         return Request.CreateResponse(HttpStatusCode.OK,
                             entities.Employees.Where(e => e.Gender.ToLower() == "male").ToList());
@@ -27,8 +32,7 @@ namespace WebAPIDemo.Controllers
                         return Request.CreateResponse(HttpStatusCode.OK,
                             entities.Employees.Where(e => e.Gender.ToLower() == "female").ToList());
                     default:
-                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest,
-                            "Value for gender must be Male, Female or All. " + gender + " is invalid.");
+                        return Request.CreateResponse(HttpStatusCode.BadRequest);
                 }
             }
         }
