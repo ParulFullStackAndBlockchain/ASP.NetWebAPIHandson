@@ -10,16 +10,33 @@
             var ulEmployees = $('#ulEmployees');
 
             $('#btn').click(function () {
+                // Get the username & password from textboxes
+                var username = $('#txtUsername').val();
+                var password = $('#txtPassword').val();
+
                 $.ajax({
                     type: 'GET',
-                    url: "http://localhost:3567/api/Employees", //absolute path 
-                    dataType: 'json', 
+                    // Make sure to change the port number to where you have the employee service running on your local machine
+                    url: "http://localhost:3567/api/Employees", //absolute path
+                    dataType: 'json',
+                    // Specify the authentication header
+                    // btoa() method encodes a string to Base64
+                    headers: {
+                        'Authorization': 'Basic ' + btoa(username + ':' + password)
+                    },
                     success: function (data) {
                         ulEmployees.empty();
                         $.each(data, function (index, val) {
                             var fullName = val.FirstName + ' ' + val.LastName;
-                            ulEmployees.append('<li>' + fullName + '</li>');
+                            ulEmployees.append('<li>' + fullName + ' (' + val.Gender + ')</li>');
                         });
+                    },
+                    complete: function (jqXHR) {
+                    if (jqXHR.status == '401') {
+                        ulEmployees.empty();
+                        ulEmployees.append('<li style="color:red">'
+                            + jqXHR.status + ' : ' + jqXHR.statusText + '</li>')
+                    }
                     }
                 });
             });
@@ -33,13 +50,13 @@
 </head>
 <body>
     <div>
+        Username : <input type="text" id="txtUsername" />
+        Password : <input type="password" id="txtPassword" />
+        <br /><br />
         <input id="btn" type="button" value="Get All Employees" />
         <input id="btnClear" type="button" value="Clear" />
         <ul id="ulEmployees" />
     </div>
 </body>
 </html>
-<!-- To allow cross domain ajax calls by enabling CORS
-Step 1 : Install Microsoft.AspNet.WebApi.Cors package. Execute the following command using NuGet Package Manager Console. 
-Make sure to select "EmployeeService" project from "Default project" dropdown. Install-Package Microsoft.AspNet.WebApi.Cors
--->
+
