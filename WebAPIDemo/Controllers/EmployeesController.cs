@@ -140,9 +140,3 @@ namespace WebAPIDemo.Controllers
     }
 }
 
-//To enable SSL in Visual Studio 2015
-//Step1. In the Solution Explorer click on EmployeeService Web API project and press F4 key on the keyboard.This launches Project 
-//Properties window.In the Properties window, set SSL Enabled property to true. As soon as we do this Visual Studio sets SSL URL.
-//Step2. To resolve invalid certificate issue, place the certificate that visual studio has issued in the Trusted Root 
-//Certificates folder.Refer https://csharp-video-tutorials.blogspot.com/2016/09/enable-ssl-in-visual-studio-development.html.
-

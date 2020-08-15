@@ -32,7 +32,16 @@ namespace WebAPIDemo
             );
             
             EnableCorsAttribute cors = new EnableCorsAttribute("*", "*", "*");
-            config.EnableCors(cors);           
+            config.EnableCors(cors);
+
+            //This adds RequireHttpsAttribute as a filter to the filters collection. So for every request the code in this filter
+            //is executed. If the request is issued using HTTP, it will be automatically redirected to HTTPS.
+            config.Filters.Add(new RequireHttpsAttribute());
         }
     }
 }
+
+//Note : If you don't want to enable HTTPS for the entire application then don't add RequireHttpsAttribute to the filters collection
+//on the config object in the register method. Simply decorate the controller class or the action method with RequireHttpsAttribute 
+//for which you want HTTPS to be enabled. For the rest of the controllers and action methods HTTPS will not be enabled.
+
