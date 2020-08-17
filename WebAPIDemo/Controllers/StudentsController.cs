@@ -7,10 +7,7 @@ using System.Web.Http;
 using WebAPIDemo.Models;
 
 namespace WebAPIDemo.Controllers
-{
-    //What is the use of RoutePrefix attribute ? RoutePrefix attribute is used to specify the common route prefix at the controller 
-    //level to eliminate the need to repeat that common route prefix on every controller action method.
-    //How to override the route prefix? Use ~character to override the route prefix.
+{   
     [RoutePrefix("api/students")]
     public class StudentsController : ApiController
     {
@@ -26,11 +23,7 @@ namespace WebAPIDemo.Controllers
         {
             return students;
         }
-
-        //[Route("api/teachers")] => No HTTP resource was found that matches the request URI 'http://localhost:3567/api/Teachers'
-        //But if we navigate to /api/students/api/teachers then we get the list of teachers. 
-        //This is because of the [RoutePrefix("api/students")] attribute on StudentsController.
-
+        
         [Route("~/api/teachers")]
         public IEnumerable<Teacher> GetTeachers()
         {
@@ -44,12 +37,28 @@ namespace WebAPIDemo.Controllers
             return teachers;
         }
 
-        [Route("{id}")]
+        //[Route("{id}")]
+        //[Route("{id:int}")] => "{parameter:constraint}"
+        //[Route("{id:int:min(1):max(3)}")] => if you want the id value in the URI to be between 1 and 3 inclusive
+        [Route("{id:int:range(1,3)}")] // Using range attribute constraint in place of min and max.
         public Student Get(int id)
         {
             return students.FirstOrDefault(s => s.Id == id);
         }
-       
+
+        // [Route("{name}")] => At this point build the solution, and if you navigate to either of the following URI's you get an error
+        //stating "Multiple actions were found that match the request" /api/students/1 or /api/students/Sam
+        //This is because the framework does not know which version of the Get() method to use
+
+        //This can be very easily achieved using Route Constraints. To specify route constraint, the syntax is 
+        //"{parameter:constraint}". like 
+
+        [Route("{name:alpha}")]
+        public Student Get(string name)
+        {
+            return students.FirstOrDefault(s => s.Name.ToLower() == name.ToLower());
+        }
+
         [Route("{id}/courses")]
         public IEnumerable<string> GetStudentCourses(int id)
         {
