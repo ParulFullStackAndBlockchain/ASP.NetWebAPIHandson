@@ -7,8 +7,7 @@ using System.Web.Http;
 using WebAPIDemo.Models;
 
 namespace WebAPIDemo.Controllers
-{   
-    [RoutePrefix("api/students")]
+{       
     public class StudentsController : ApiController
     {
         static List<Student> students = new List<Student>()
@@ -18,59 +17,54 @@ namespace WebAPIDemo.Controllers
             new Student() { Id = 3, Name = "John" }
         };
 
-        [Route("")]
-        public IEnumerable<Student> Get()
+        //Retrurn Type : HttpResponseMessage
+        //public HttpResponseMessage Get()
+        //{
+        //    return Request.CreateResponse(students);
+        //}
+
+        //Retrurn Type : IHttpActionResult
+        public IHttpActionResult Get()
         {
-            return students;
+            //To return status code 200, we use Ok() helper method
+            return Ok(students);
         }
-        
-        [Route("~/api/teachers")]
-        public IEnumerable<Teacher> GetTeachers()
+
+
+        //Retrurn Type : HttpResponseMessage
+        //public HttpResponseMessage Get(int id)
+        //{
+        //    var student = students.FirstOrDefault(s => s.Id == id);
+        //    if (student == null)
+        //    {
+        //        return Request.CreateErrorResponse(HttpStatusCode.NotFound,
+        //            "Student not found");
+        //    }
+
+        //    return Request.CreateResponse(student);
+        //}
+
+        //Retrurn Type : IHttpActionResult
+        public IHttpActionResult Get(int id)
         {
-            List<Teacher> teachers = new List<Teacher>()
+            var student = students.FirstOrDefault(s => s.Id == id);
+            if (student == null)
             {
-                new Teacher() { Id = 1, Name = "Rob" },
-                new Teacher() { Id = 2, Name = "Mike" },
-                new Teacher() { Id = 3, Name = "Mary" }
-            };
+                //to return status code 404, we used NotFound() method
+                //return NotFound();
+                return Content(HttpStatusCode.NotFound, "Student not found");
+            }
 
-            return teachers;
+            return Ok(student);
         }
 
-        //Link generation for the newly created item to work as expected work as expected irrespective of whether we have a forward 
-        //slash (/) or not in Fiddler or Postman when issuing the POST request. Follow below steps.
-        //Step1. Set a name for the route using the Name property of the [Route] attribute
-        [Route("{id:int}", Name = "GetStudentById")]
-        public Student Get(int id)
-        {
-            return students.FirstOrDefault(s => s.Id == id);
-        }
-
-        //Step2. Use the name of the route to generate the link
-        [Route("")]
-        public HttpResponseMessage Post(Student student)
-        {
-            students.Add(student);
-            var response = Request.CreateResponse(HttpStatusCode.Created);
-            response.Headers.Location = new Uri(Url.Link("GetStudentById", new { id = student.Id }));
-            return response;
-        }
-
-        [Route("{name:alpha}")]
-        public Student Get(string name)
-        {
-            return students.FirstOrDefault(s => s.Name.ToLower() == name.ToLower());
-        }
-
-        [Route("{id}/courses")]
-        public IEnumerable<string> GetStudentCourses(int id)
-        {
-            if (id == 1)
-                return new List<string>() { "C#", "ASP.NET", "SQL Server" };
-            else if (id == 2)
-                return new List<string>() { "ASP.NET Web API", "C#", "SQL Server" };
-            else
-                return new List<string>() { "Bootstrap", "jQuery", "AngularJs" };
-        }
+        //In addition to Ok() and NotFound() helper methods, we have the following methods that we can use depending on what we want 
+        //to return from our controller action method.All these methods return a type, that implements IHttpActionResult interface.
+        //BadRequest(), Conflict(), Created(), InternalServerError(), Redirect(), Unauthorized()
     }
 }
+//In Web API 1, we have HttpResponseMessage type that a controller action method returns. A new type called "IHttpActionResult" 
+//is introduced in Web API 2 that can be returned from a controller action method. Instead of returning HttpResponseMessage from a 
+//controller action, we can now return IHttpActionResult. There are 2 main advantages of using the IHttpActionResult interface.
+//1. The code is cleaner and easier to read
+//2 .Unit testing controller action methods is much simpler.
