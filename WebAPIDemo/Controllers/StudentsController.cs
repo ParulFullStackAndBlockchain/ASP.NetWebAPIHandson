@@ -8,6 +8,10 @@ using WebAPIDemo.Models;
 
 namespace WebAPIDemo.Controllers
 {
+    //What is the use of RoutePrefix attribute ? RoutePrefix attribute is used to specify the common route prefix at the controller 
+    //level to eliminate the need to repeat that common route prefix on every controller action method.
+    //How to override the route prefix? Use ~character to override the route prefix.
+    [RoutePrefix("api/students")]
     public class StudentsController : ApiController
     {
         static List<Student> students = new List<Student>()
@@ -17,27 +21,36 @@ namespace WebAPIDemo.Controllers
             new Student() { Id = 3, Name = "John" }
         };
 
+        [Route("")]
         public IEnumerable<Student> Get()
         {
             return students;
         }
 
-        //Can we use both Attribute Routing and Convention-based routing in a single Web API project ?
-        //Yes, both the routing mechanisms can be combined in a single Web API project.The controller action methods that have 
-        //the[Route] attribute uses Attribute Routing, and the others without[Route] attribute uses Convention-based routing.
+        //[Route("api/teachers")] => No HTTP resource was found that matches the request URI 'http://localhost:3567/api/Teachers'
+        //But if we navigate to /api/students/api/teachers then we get the list of teachers. 
+        //This is because of the [RoutePrefix("api/students")] attribute on StudentsController.
+
+        [Route("~/api/teachers")]
+        public IEnumerable<Teacher> GetTeachers()
+        {
+            List<Teacher> teachers = new List<Teacher>()
+            {
+                new Teacher() { Id = 1, Name = "Rob" },
+                new Teacher() { Id = 2, Name = "Mike" },
+                new Teacher() { Id = 3, Name = "Mary" }
+            };
+
+            return teachers;
+        }
+
+        [Route("{id}")]
         public Student Get(int id)
         {
             return students.FirstOrDefault(s => s.Id == id);
         }
-
-        //What is Attribute Routing?
-        //Using the[Route] attribute to define routes is called Attribute Routing
-
-        //What are the advantages of using Attribute Routing?
-        //Attribute routing gives us more control over the URIs than convention-based routing.Creating URI patterns like hierarchies of
-        //resources (For example, students have courses, Departments have employees) is very difficult with convention-based routing.
-        //With attribute routing all you have to do is use the [Route] attribute as shown below.
-        [Route("api/students/{id}/courses")]
+       
+        [Route("{id}/courses")]
         public IEnumerable<string> GetStudentCourses(int id)
         {
             if (id == 1)
