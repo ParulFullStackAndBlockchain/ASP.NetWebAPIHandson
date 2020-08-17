@@ -37,21 +37,24 @@ namespace WebAPIDemo.Controllers
             return teachers;
         }
 
-        //[Route("{id}")]
-        //[Route("{id:int}")] => "{parameter:constraint}"
-        //[Route("{id:int:min(1):max(3)}")] => if you want the id value in the URI to be between 1 and 3 inclusive
-        [Route("{id:int:range(1,3)}")] // Using range attribute constraint in place of min and max.
+        //Link generation for the newly created item to work as expected work as expected irrespective of whether we have a forward 
+        //slash (/) or not in Fiddler or Postman when issuing the POST request. Follow below steps.
+        //Step1. Set a name for the route using the Name property of the [Route] attribute
+        [Route("{id:int}", Name = "GetStudentById")]
         public Student Get(int id)
         {
             return students.FirstOrDefault(s => s.Id == id);
         }
 
-        // [Route("{name}")] => At this point build the solution, and if you navigate to either of the following URI's you get an error
-        //stating "Multiple actions were found that match the request" /api/students/1 or /api/students/Sam
-        //This is because the framework does not know which version of the Get() method to use
-
-        //This can be very easily achieved using Route Constraints. To specify route constraint, the syntax is 
-        //"{parameter:constraint}". like 
+        //Step2. Use the name of the route to generate the link
+        [Route("")]
+        public HttpResponseMessage Post(Student student)
+        {
+            students.Add(student);
+            var response = Request.CreateResponse(HttpStatusCode.Created);
+            response.Headers.Location = new Uri(Url.Link("GetStudentById", new { id = student.Id }));
+            return response;
+        }
 
         [Route("{name:alpha}")]
         public Student Get(string name)
