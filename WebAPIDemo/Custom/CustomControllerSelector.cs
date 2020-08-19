@@ -31,10 +31,17 @@ namespace WebAPIDemo.Custom
 
             // Default version number to 1
             string versionNumber = "1";
-            var versionQueryString = HttpUtility.ParseQueryString(request.RequestUri.Query);
-            if (versionQueryString["v"] != null)
+
+            // Get the version number from Custom version header.This custom header can have any name. We have to use this
+            // same header to specify the version when issuing a request
+            string customHeader = "X-StudentService-Version";
+            if (request.Headers.Contains(customHeader))
             {
-                versionNumber = versionQueryString["v"];
+                versionNumber = request.Headers.GetValues(customHeader).FirstOrDefault();
+                if (versionNumber.Contains(","))
+                {
+                    versionNumber = versionNumber.Substring(0, versionNumber.IndexOf(","));
+                }
             }
 
             if (versionNumber == "1")
