@@ -17,13 +17,13 @@ namespace WebAPIDemo.Controllers
             new StudentV1() { Id = 3, Name = "John"},
         };
 
-        [Route("api/v1/students")]
+        //can be requested via http://localhost:3567/api/students?v=1
         public IEnumerable<StudentV1> Get()
         {
             return students;
         }
 
-        [Route("api/v1/students/{id}")]
+        //can be requested via http://localhost:3567/api/students?v=1&id=1
         public StudentV1 Get(int id)
         {
             return students.FirstOrDefault(s => s.Id == id);
