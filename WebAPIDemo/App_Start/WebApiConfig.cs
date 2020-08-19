@@ -39,6 +39,18 @@ namespace WebAPIDemo
             //Replaces the default controller selector with our custom controller selector. 
             config.Services.Replace(typeof(IHttpControllerSelector),new CustomControllerSelector(config));
 
+            //To add the custom media types to the JsonFormatter
+            config.Formatters.JsonFormatter.SupportedMediaTypes
+                .Add(new MediaTypeHeaderValue("application/vnd.godigitalpro.students.v1+json"));
+            config.Formatters.JsonFormatter.SupportedMediaTypes
+                .Add(new MediaTypeHeaderValue("application/vnd.godigitalpro.students.v2+json"));
+
+            //To add the custom media types to the XmlFormatter
+            config.Formatters.XmlFormatter.SupportedMediaTypes
+                .Add(new MediaTypeHeaderValue("application/vnd.godigitalpro.students.v1+xml"));
+            config.Formatters.XmlFormatter.SupportedMediaTypes
+                .Add(new MediaTypeHeaderValue("application/vnd.godigitalpro.students.v2+xml"));
+
             EnableCorsAttribute cors = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(cors);
 
