@@ -26,14 +26,29 @@ namespace WebAPIDemo
             //In ASP.NET Web API 2, Attribute Routing is enabled by default using following line of code.
             config.MapHttpAttributeRoutes();
 
-            //Convention-based routing : When we create a new Web API project using Visual Studio, 
-            //a default route is created as shown below.
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
-            
+            ////Convention-based routing : When we create a new Web API project using Visual Studio, 
+            ////a default route is created as shown below.
+            //config.Routes.MapHttpRoute(
+            //    name: "DefaultApi",
+            //    routeTemplate: "api/{controller}/{id}",
+            //    defaults: new { id = RouteParameter.Optional }
+            //);
+
+            //Note: Following 2 route templates are for convention-based routing to implement versioning.And when we are using 
+            //Attribute Routing in place of convention-based routing we can safely comment these route templates.
+
+            //config.Routes.MapHttpRoute(
+            //    name: "Version1",
+            //    routeTemplate: "api/v1/Students/{id}",
+            //    defaults: new { id = RouteParameter.Optional, controller = "StudentsV1" }
+            //);
+
+            //config.Routes.MapHttpRoute(
+            //    name: "Version2",
+            //    routeTemplate: "api/v2/Students/{id}",
+            //    defaults: new { id = RouteParameter.Optional, controller = "StudentsV2" }
+            //);
+
             EnableCorsAttribute cors = new EnableCorsAttribute("*", "*", "*");
             config.EnableCors(cors);
 
