@@ -32,16 +32,19 @@ namespace WebAPIDemo.Custom
             // Default version number to 1
             string versionNumber = "1";
 
-            // Get the version number from Custom version header.This custom header can have any name. We have to use this
-            // same header to specify the version when issuing a request
-            string customHeader = "X-StudentService-Version";
-            if (request.Headers.Contains(customHeader))
+            // Get the version number from the Accept header
+
+            // Users can include multiple Accept headers in the request
+            // Check if any of the Accept headers has a parameter with name version
+            var acceptHeader = request.Headers.Accept.Where(a => a.Parameters
+                                .Count(p => p.Name.ToLower() == "version") > 0);
+
+            // If there is atleast one header with a "version" parameter
+            if (acceptHeader.Any())
             {
-                versionNumber = request.Headers.GetValues(customHeader).FirstOrDefault();
-                if (versionNumber.Contains(","))
-                {
-                    versionNumber = versionNumber.Substring(0, versionNumber.IndexOf(","));
-                }
+                // Get the version parameter value from the Accept header
+                versionNumber = acceptHeader.First().Parameters
+                                .First(p => p.Name.ToLower() == "version").Value;
             }
 
             if (versionNumber == "1")
